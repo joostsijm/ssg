@@ -3,23 +3,18 @@
 Website for Supremacy-stats
 """
 
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_compress import Compress
 from flask_argon2 import Argon2
-
-
-DATABASE_URI = 'postgresql://supindex@localhost/supindex'
+from flask_menu import Menu
 
 
 class Config(object):
-    SCHEDULER_JOBSTORES = {
-        'default': SQLAlchemyJobStore(url=DATABASE_URI)
-    }
-    SCHEDULER_API_ENABLED = True
-    SQLALCHEMY_DATABASE_URI = DATABASE_URI
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URI", default=None)
     SECRET_KEY = 'g6DGM5y2bVhb0mxdCRELI5m7fnzzoJ2y'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SEND_FILE_MAX_AGE_DEFAULT = 1296000
@@ -41,6 +36,7 @@ COMPRESS_MIMETYPES = [
 COMPRESS_LEVEL = 6
 COMPRESS_MIN_SIZE = 500
 Compress(app)
+Menu(app=app)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
