@@ -11,6 +11,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_compress import Compress
 from flask_argon2 import Argon2
+from flask_menu import Menu
 from dotenv import load_dotenv
 
 
@@ -41,6 +42,7 @@ COMPRESS_MIMETYPES = [
 COMPRESS_LEVEL = 6
 COMPRESS_MIN_SIZE = 500
 Compress(app)
+Menu(app=app)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

@@ -6,7 +6,7 @@ All models for module
 from datetime import datetime
 # from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
 from flask_login import UserMixin
-from app import db, argon2
+from app import db, argon2, login_manager
 
 
 class Base():
@@ -24,6 +24,13 @@ class User(Base, db.Model, UserMixin):
     email = db.Column(db.String(255), unique=True)
     _password = db.Column("password", db.String(255))
     registration_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, id=None):
+        self.id = id
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(user_id)
 
     @property
     def password(self):
@@ -49,9 +56,9 @@ class Page(Base, db.Model):
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey("sp_users.id")
+        db.ForeignKey("user.id")
     )
     user = db.relationship(
         "User",
-        backref=db.backref("players", lazy="dynamic")
+        backref=db.backref("Pages", lazy="dynamic")
     )
