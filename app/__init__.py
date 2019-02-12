@@ -1,7 +1,9 @@
 
 """
-Website for Supremacy-stats
+Initialize the modules needed for the website
 """
+
+import os
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -9,18 +11,16 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_compress import Compress
 from flask_argon2 import Argon2
+from dotenv import load_dotenv
 
 
-DATABASE_URI = 'postgresql://supindex@localhost/supindex'
-
+load_dotenv()
 
 class Config(object):
-    SCHEDULER_JOBSTORES = {
-        'default': SQLAlchemyJobStore(url=DATABASE_URI)
-    }
+    """Flask configuration"""
     SCHEDULER_API_ENABLED = True
-    SQLALCHEMY_DATABASE_URI = DATABASE_URI
-    SECRET_KEY = 'g6DGM5y2bVhb0mxdCRELI5m7fnzzoJ2y'
+    SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URI"]
+    SECRET_KEY = os.environ["SECRET_KEY"]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SEND_FILE_MAX_AGE_DEFAULT = 1296000
 

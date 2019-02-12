@@ -12,9 +12,7 @@ flask-argon2 = "*"
 flask-migrate = "*"
 flask-sqlalchemy = "*"
 flask-apscheduler = "*"
-apscheduler = "*"
-sqlalchemy = "*"
 psycopg2-binary = "*"
-github-webhook = "*"
+python-dotenv = "*"
 
 [dev-packages]
