@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	{% with messages = get_flashed_messages(with_categories=true) %}
+	{% if messages %}
+	{% for category, message in messages %}
+	<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+		{{ message }}
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	{% endfor %}
+	{% endif %}
+	{% endwith %}
+	{%- for item in current_menu.children recursive -%}
+	<li class="nav-item" data-toggle="tooltip" data-placement="right" title="{{ item.text }}">
+	    <a class="nav-link" href="{{ item.url}}">
+	        <span class="nav-link-text">{{ item.text }}</span>
+	    </a>
+	</li>
+	{%- endfor -%}
+	<h1>Backend</h1>
+	{% for page in pages %}
+	<a href="{{ url_for('backend.view_page', page_id=page.id) }}">{{ page.title }}</a><br>
+	{% endfor %}
+</body>
