@@ -109,7 +109,7 @@ def index():
 @register_menu(BLUEPRINT, 'page_create', 'Create page')
 @login_required
 def create_page():
-    """Show creating page"""
+    """Page creating"""
     if request.method == 'POST':
         page = Page()
         page.title = request.form['title']
@@ -124,7 +124,27 @@ def create_page():
     return render_template('page/create.j2')
 
 
-@BLUEPRINT.route('/page/<int:page_id>')
+@BLUEPRINT.route('/page/edit/<int:page_id>', methods=["GET", "POST"])
+@login_required
+def edit_page(page_id):
+    """Page editing"""
+    page = Page.query.get(page_id)
+
+    if request.method == 'POST':
+        page.title = request.form['title']
+        page.source = request.form['source']
+        page.user_id = current_user.id
+
+        db.session.add(page)
+        db.session.commit()
+
+        flash('Page "%s" successfully edit' % page.title, 'success')
+
+    return render_template('page/edit.j2', page=page)
+
+
+@BLUEPRINT.route('/page/view/<int:page_id>')
+@login_required
 def view_page(page_id):
     """Display page"""
     page = Page.query.get(page_id)

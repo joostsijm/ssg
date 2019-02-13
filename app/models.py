@@ -5,6 +5,8 @@ All models for module
 
 from datetime import datetime
 # from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
+import markdown
+from flask import Markup
 from flask_login import UserMixin
 from app import db, argon2, login_manager
 
@@ -53,6 +55,10 @@ class Page(Base, db.Model):
     title = db.Column(db.String, nullable=False)
     datetime = db.Column(db.DateTime, default=datetime.utcnow)
     source = db.Column(db.String)
+
+    def content(self):
+        """Render page source"""
+        return Markup(markdown.markdown(self.source))
 
     user_id = db.Column(
         db.Integer,

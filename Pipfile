@@ -14,5 +14,6 @@ flask-sqlalchemy = "*"
 flask-apscheduler = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+markdown = "*"
 
 [dev-packages]
