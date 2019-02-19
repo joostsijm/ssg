@@ -101,7 +101,7 @@ def logout():
 @login_required
 def index():
     """Show homepage"""
-    pages = Page.query.all()
+    pages = Page.query.filter(Page.parent_id == None).all()
     return render_template('site/index.j2', pages=pages)
 
 
@@ -110,18 +110,20 @@ def index():
 @login_required
 def create_page():
     """Page creating"""
+    pages = Page.query.all()
     if request.method == 'POST':
         page = Page()
         page.title = request.form['title']
         page.source = request.form['source']
         page.user_id = current_user.id
+        page.parent_id = request.form['parent_id'] if request.form['parent_id'] else None
 
         db.session.add(page)
         db.session.commit()
 
         flash('Page "%s" successfully created' % page.title, 'success')
 
-    return render_template('page/create.j2')
+    return render_template('page/create.j2', pages=pages)
 
 
 @BLUEPRINT.route('/page/edit/<int:page_id>', methods=["GET", "POST"])
@@ -129,10 +131,12 @@ def create_page():
 def edit_page(page_id):
     """Page editing"""
     page = Page.query.get(page_id)
+    pages = Page.query.filter(Page.id != page.id).all()
 
     if request.method == 'POST':
         page.title = request.form['title']
         page.source = request.form['source']
+        page.parent_id = request.form['parent_id'] if request.form['parent_id'] else None
         page.user_id = current_user.id
 
         db.session.add(page)
@@ -140,7 +144,11 @@ def edit_page(page_id):
 
         flash('Page "%s" successfully edit' % page.title, 'success')
 
-    return render_template('page/edit.j2', page=page)
+    return render_template(
+        'page/edit.j2',
+        page=page,
+        pages=pages
+    )
 
 
 @BLUEPRINT.route('/page/view/<int:page_id>')

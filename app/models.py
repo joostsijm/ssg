@@ -11,17 +11,10 @@ from flask_login import UserMixin
 from app import db, argon2, login_manager
 
 
-class Base():
-    """Base class for models"""
-    id = db.Column(db.Integer, primary_key=True)
-
-    def __repr__(self):
-        return "<%s(%s)>" % (type(self).__name__, self.id)
-
-
-class User(Base, db.Model, UserMixin):
+class User(db.Model, UserMixin):
     """Model for User"""
 
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True)
     _password = db.Column("password", db.String(255))
@@ -49,12 +42,14 @@ class User(Base, db.Model, UserMixin):
         return argon2.check_password_hash(self.password, password)
 
 
-class Page(Base, db.Model):
+class Page(db.Model):
     """Model for Page"""
 
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     datetime = db.Column(db.DateTime, default=datetime.utcnow)
     source = db.Column(db.String)
+
 
     def content(self):
         """Render page source"""
@@ -67,4 +62,15 @@ class Page(Base, db.Model):
     user = db.relationship(
         "User",
         backref=db.backref("Pages", lazy="dynamic")
+    )
+
+    parent_id = db.Column(
+        db.Integer,
+        db.ForeignKey("page.id")
+    )
+    parent = db.relationship(
+        "Page",
+        backref=db.backref("children", lazy="dynamic"),
+        uselist=False,
+        remote_side=id
     )

@@ -17,15 +17,27 @@
 	{% endfor %}
 	{% endif %}
 	{% endwith %}
-	{%- for item in current_menu.children recursive -%}
-	<li class="nav-item" data-toggle="tooltip" data-placement="right" title="{{ item.text }}">
-	    <a class="nav-link" href="{{ item.url}}">
-	        <span class="nav-link-text">{{ item.text }}</span>
-	    </a>
-	</li>
-	{%- endfor -%}
+	<ul>
+		{%- for item in current_menu.children recursive -%}
+		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="{{ item.text }}">
+		    <a class="nav-link" href="{{ item.url}}">
+		        <span class="nav-link-text">{{ item.text }}</span>
+		    </a>
+		</li>
+		{%- endfor -%}
+	</ul>
 	<h1>Backend</h1>
-	{% for page in pages %}
-	<a href="{{ url_for('backend.view_page', page_id=page.id) }}">{{ page.title }}</a><br>
-	{% endfor %}
+	<h2>Pages</h2>
+	<ul>
+		{%- for page in pages recursive -%}
+		<li>
+			<a href="{{ url_for('backend.view_page', page_id=page.id) }}">{{ page.title if page.title else 'page %s' % page.id }}</a>
+		    {% if page.children.count() %}
+		    <ul>
+		    	{{ loop(page.children) }}
+		    </ul>
+		    {% endif %}
+		</li>
+		{%- endfor -%}
+	</ul>
 </body>

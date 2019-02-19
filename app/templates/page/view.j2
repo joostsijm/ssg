@@ -17,13 +17,15 @@
 	{% endfor %}
 	{% endif %}
 	{% endwith %}
-	{%- for item in current_menu.children recursive -%}
-	<li class="nav-item" data-toggle="tooltip" data-placement="right" title="{{ item.text }}">
-	    <a class="nav-link" href="{{ item.url}}">
-	        <span class="nav-link-text">{{ item.text }}</span>
-	    </a>
-	</li>
-	{%- endfor -%}
+	<ul>
+		{%- for item in current_menu.children recursive -%}
+		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="{{ item.text }}">
+		    <a class="nav-link" href="{{ item.url}}">
+		        <span class="nav-link-text">{{ item.text }}</span>
+		    </a>
+		</li>
+		{%- endfor -%}
+	</ul>
 	<h1>Title: {{ page.title }}</h1>
 	<a href="{{ url_for('backend.edit_page', page_id=page.id) }}">Edit</a><br>
 	<p>{{ page.source }}</p>
