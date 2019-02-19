@@ -3,6 +3,7 @@
 All models for module
 """
 
+from urllib.parse import quote
 from datetime import datetime
 # from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
 import markdown
@@ -54,6 +55,11 @@ class Page(db.Model):
     def content(self):
         """Render page source"""
         return Markup(markdown.markdown(self.source))
+
+
+    def url(self):
+        """Generate URL for page"""
+        return quote(self.title.lower())
 
     user_id = db.Column(
         db.Integer,

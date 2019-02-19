@@ -30,11 +30,11 @@ def login():
                 flash('You were successfully logged in.', 'success')
                 if request.args.get("next") is not None:
                     return redirect(request.args.get("next"))
-                return redirect(url_for('index'))
+                return redirect(url_for('backend.index'))
             flash('Incorrect password.', 'danger')
         else:
             flash('User not found.', 'danger')
-        return redirect(url_for('login'))
+        return redirect(url_for('backend.login'))
     return render_template('user/login.j2')
 
 
@@ -93,7 +93,7 @@ def logout():
     """Logout function for users"""
     logout_user()
     flash('Successfully logged out.', 'success')
-    return redirect(url_for('login'))
+    return redirect(url_for('backend.login'))
 
 
 @BLUEPRINT.route('/')
@@ -157,3 +157,17 @@ def view_page(page_id):
     """Display page"""
     page = Page.query.get(page_id)
     return render_template('page/view.j2', page=page)
+
+
+@BLUEPRINT.route('/render')
+@register_menu(BLUEPRINT, 'render', 'Render')
+@login_required
+def render():
+    """Render pages to file"""
+    pages = Page.query.all()
+    for page in pages:
+        with open('app/modules/static/pages/%s.html' % page.url(), 'w') as file:
+            file.write(page.content())
+
+    flash('Successfully rendered pages.', 'success')
+    return redirect(url_for('backend.index'))
