@@ -54,7 +54,7 @@ class Page(db.Model):
 
     def content(self):
         """Render page source"""
-        return Markup(markdown.markdown(self.source))
+        return Markup(markdown.markdown(self.source, extensions=['tables', 'toc', 'meta']))
 
 
     def url(self):

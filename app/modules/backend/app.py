@@ -7,7 +7,7 @@ import os
 
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_menu import Menu, register_menu
-from flask import render_template, request, redirect, url_for, flash, Blueprint, abort
+from flask import render_template, request, redirect, url_for, flash, Blueprint, abort, jsonify
 from jinja2 import TemplateNotFound
 from app import app, login_manager, db
 from app.models import User, Page
@@ -167,14 +167,31 @@ def view_page(page_id):
 def render():
     """Render pages to file"""
     pages = Page.query.filter(Page.parent_id == None).all()
+    menu = []
+    for page in pages:
+        menu.append(generate_menu(page))
+
     path_base = 'app/modules/static/pages/'
     for page in pages:
-        render_page(path_base, page)
+        render_page(path_base, page, menu)
 
     flash('Successfully rendered pages.', 'success')
     return redirect(url_for('backend.index'))
 
-def render_page(path, page):
+
+def generate_menu(page):
+    """Generate menu based on pages"""
+    menu_item = {}
+    menu_item['title'] = page.title
+    menu_item['url'] = page.path()
+    if page.children.count():
+        menu_item['children'] = []
+        for child_page in page.children:
+            menu_item['children'].append(generate_menu(child_page))
+    return menu_item
+
+
+def render_page(path, page, menu):
     """Function for page generation, recursive"""
     path = path + page.url()
     if page.children.count():
@@ -182,11 +199,12 @@ def render_page(path, page):
         if not os.path.exists(parent_path):
             os.makedirs(parent_path)
         for child_page in page.children:
-            render_page(parent_path, child_page)
+            render_page(parent_path, child_page, menu)
 
     with open('%s.html' % path, 'w') as file:
         rendered_page = render_template(
             'public/site.j2',
             page=page,
+            menu=menu
         )
         file.write(rendered_page)

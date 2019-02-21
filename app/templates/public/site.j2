@@ -6,14 +6,14 @@
 </head>
 <body>
     <ul>
-        {%- for child_page in page.children recursive -%}
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="{{ child_page.title }}">
-            <a class="nav-link" href="/{{ child_page.path() }}">
-                <span class="nav-link-text">{{ child_page.title }}</span>
+        {%- for menu_item in menu recursive -%}
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="{{ menu_item['title'] }}">
+            <a class="nav-link" href="/{{ menu_item['url'] }}">
+                <span class="nav-link-text">{{ menu_item['title'] }}</span>
             </a>
-            {% if child_page.children.count() %}
+            {% if 'children' in menu_item %}
             <ul>
-                {{ loop(child_page.children) }}
+                {{ loop(menu_item['children']) }}
             </ul>
             {% endif %}
         </li>
