@@ -18,7 +18,7 @@ BLUEPRINT = Blueprint(
 )
 
 @BLUEPRINT.route("/", defaults={"page": "index"})
-@BLUEPRINT.route("/<page>")
+@BLUEPRINT.route("/<path:page>")
 def show(page):
     """Display static page"""
     try:

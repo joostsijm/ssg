@@ -3,6 +3,8 @@
 Backend
 """
 
+import os
+
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_menu import Menu, register_menu
 from flask import render_template, request, redirect, url_for, flash, Blueprint, abort
@@ -164,10 +166,27 @@ def view_page(page_id):
 @login_required
 def render():
     """Render pages to file"""
-    pages = Page.query.all()
+    pages = Page.query.filter(Page.parent_id == None).all()
+    path_base = 'app/modules/static/pages/'
     for page in pages:
-        with open('app/modules/static/pages/%s.html' % page.url(), 'w') as file:
-            file.write(page.content())
+        render_page(path_base, page)
 
     flash('Successfully rendered pages.', 'success')
     return redirect(url_for('backend.index'))
+
+def render_page(path, page):
+    """Function for page generation, recursive"""
+    path = path + page.url()
+    if page.children.count():
+        parent_path = path + '/'
+        if not os.path.exists(parent_path):
+            os.makedirs(parent_path)
+        for child_page in page.children:
+            render_page(parent_path, child_page)
+
+    with open('%s.html' % path, 'w') as file:
+        rendered_page = render_template(
+            'public/site.j2',
+            page=page,
+        )
+        file.write(rendered_page)

@@ -59,7 +59,14 @@ class Page(db.Model):
 
     def url(self):
         """Generate URL for page"""
-        return quote(self.title.lower())
+        return quote(self.title.strip().lower().replace(" ", "_"))
+
+
+    def path(self):
+        """Generate path with parents"""
+        if self.parent_id:
+            return '%s/%s' % (self.parent.path(), self.url())
+        return self.url()
 
     user_id = db.Column(
         db.Integer,

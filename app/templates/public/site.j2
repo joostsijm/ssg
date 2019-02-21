@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ page.title }} - ssg</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <ul>
+        {%- for child_page in page.children recursive -%}
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="{{ child_page.title }}">
+            <a class="nav-link" href="/{{ child_page.path() }}">
+                <span class="nav-link-text">{{ child_page.title }}</span>
+            </a>
+            {% if child_page.children.count() %}
+            <ul>
+                {{ loop(child_page.children) }}
+            </ul>
+            {% endif %}
+        </li>
+        {%- endfor -%}
+    </ul>
+    <div>
+        {{ page.content() }}
+    </div>
+</body>
