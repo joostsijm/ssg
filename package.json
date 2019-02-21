@@ -1,44 +1,29 @@
 {
-    "title": "SSG",
-    "name": "SSG",
-    "version": "1.0.0",
-    "description": "Static Site Generator",
-    "keywords": [
-        "sass",
-        "html",
-        "responsive",
-        "statics",
-        "app"
-    ],
-    "bugs": {
-        "url": "https://github.com/joostsijm/ssg/issues",
-        "email": "bergjnl@gmail.com"
-    },
-    "license": "MIT",
-    "author": "Joost Sijm",
-    "contributors": [
-        "Joost Sijm (https:/joostsijm.nl/)"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git@github.com:joostsijm/ssg.git"
-    },
-    "dependencies": {
-        "bootstrap": "4.1.3",
-        "datatables.net-bs4": "1.10.16",
-        "datatables.net-responsive": "^2.2.1",
-        "font-awesome": "4.7.0",
-        "jquery": "3.3.1",
-    },
-    "devDependencies": {
-        "browser-sync": "2.23.6",
-        "gulp": "^4.0.0",
-        "gulp-clean-css": "3.9.2",
-        "gulp-cli": "^2.0.1",
-        "gulp-header": "2.0.1",
-        "gulp-html-beautify": "^1.0.1",
-        "gulp-rename": "^1.2.2",
-        "gulp-sass": "^3.2.0",
-        "gulp-uglify": "3.0.1"
-    }
+  "name": "ssg",
+  "version": "1.0.0",
+  "main": "app/static/js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:dev": "webpack --progress",
+    "build": "webpack --progress --mode=production",
+    "watch": "webpack --progress --watch",
+    "server": "webpack-dev-server"
+  },
+  "repository": "git@github.com:joostsijm/ssg.git",
+  "author": "JoostSijm <joostsijm@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/preset-env": "^7.3.1",
+    "babel-loader": "^8.0.5",
+    "bootstrap": "^4.3.1",
+    "bootstrap-submenu": "^3.0.1",
+    "css-loader": "^2.1.0",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.7",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.0"
+  }
 }

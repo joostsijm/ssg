@@ -3,22 +3,40 @@
 <head>
     <title>{{ page.title }} - ssg</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/static/js/main.js"></script>
 </head>
 <body>
-    <ul>
-        {%- for menu_item in menu recursive -%}
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="{{ menu_item['title'] }}">
-            <a class="nav-link" href="/{{ menu_item['url'] }}">
-                <span class="nav-link-text">{{ menu_item['title'] }}</span>
-            </a>
-            {% if 'children' in menu_item %}
-            <ul>
-                {{ loop(menu_item['children']) }}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {% for menu_item in menu %}
+                {% if 'children' in menu_item %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ menu_item['title'] }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/{{ menu_item['url'] }}">{{ menu_item['title'] }}</a>
+                        {%- for child_menu_item in menu_item['children'] recursive -%}
+                        <a class="dropdown-item" href="/{{ child_menu_item['url'] }}">{{ '> ' * (loop.depth - 1) }}{{ child_menu_item['title'] }}</a>
+                        {{ loop(child_menu_item['children']) }}
+                        {%- endfor -%}
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/{{ menu_item['url'] }}">{{ menu_item['title'] }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
             </ul>
-            {% endif %}
-        </li>
-        {%- endfor -%}
-    </ul>
+        </div>
+    </nav>
     <div>
         {{ page.content() }}
     </div>
