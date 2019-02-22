@@ -40,47 +40,46 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-            <h1>Backend</h1>
-            <h1>Bootstrap starter template</h1>
-            <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-            <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th>Action</th>
-                            <th>Title</th>
-                            <th>Datum</th>
-                            <th>Author</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {%- for page in pages recursive -%}
-                        <tr>
-                            <td>
-                                <div class="btn-group">
-                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Small button
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{{ url_for('backend.view_page', page_id=page.id) }}">View</a>
-                                        <a class="dropdown-item" href="{{ url_for('backend.edit_page', page_id=page.id) }}">Edit</a>
-                                        <a class="dropdown-item" href="{{ url_for('backend.remove_page', page_id=page.id) }}">Remove</a>
-                                    </div>
+        <h1>Backend</h1>
+        <h1>Bootstrap starter template</h1>
+        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Title</th>
+                        <th>Datum</th>
+                        <th>Author</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%- for page in pages recursive -%}
+                    <tr>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Small button
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ url_for('backend.view_page', page_id=page.id) }}">View</a>
+                                    <a class="dropdown-item" href="{{ url_for('backend.edit_page', page_id=page.id) }}">Edit</a>
+                                    <a class="dropdown-item" href="{{ url_for('backend.remove_page', page_id=page.id) }}">Remove</a>
                                 </div>
-                            </td>
-                            <td>
-                                {{ '> ' * (loop.depth - 1) }}<a href="{{ url_for('backend.view_page', page_id=page.id) }}">
-                                    {{ page.title if page.title else 'page %s' % page.id }}
-                                </a>
-                            </td>
-                            <td>{{ page.datetime }}</td>
-                            <td>{{ page.user.name }}</td>
-                        </tr>
-                        {{ loop(page.children) }}
-                        {%- endfor -%}
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                        </td>
+                        <td>
+                            {{ '> ' * (loop.depth - 1) }}<a href="{{ url_for('backend.view_page', page_id=page.id) }}">
+                                {{ page.title if page.title else 'page %s' % page.id }}
+                            </a>
+                        </td>
+                        <td>{{ page.datetime }}</td>
+                        <td>{{ page.user.name }}</td>
+                    </tr>
+                    {{ loop(page.children) }}
+                    {%- endfor -%}
+                </tbody>
+            </table>
         </div>
     </main>
 </body>
