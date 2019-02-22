@@ -153,6 +153,19 @@ def edit_page(page_id):
     )
 
 
+@BLUEPRINT.route('/page/remove/<int:page_id>')
+@login_required
+def remove_page(page_id):
+    """Page removing"""
+    page = Page.query.get(page_id)
+
+    db.session.delete(page)
+    db.session.commit()
+
+    flash('Page "%s" successfully remove' % page.title, 'success')
+    return redirect(url_for('backend.index'))
+
+
 @BLUEPRINT.route('/page/view/<int:page_id>')
 @login_required
 def view_page(page_id):
