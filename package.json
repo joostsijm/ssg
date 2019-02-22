@@ -1,7 +1,12 @@
 {
   "name": "ssg",
+  "description": "Static Site Generator",
   "version": "1.0.0",
   "main": "app/static/js/index.js",
+  "bugs": {
+    "url": "https://github.com/joostsijm/ssg/issues",
+    "email": "bergjnl@gmail.com"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "webpack --progress",
@@ -17,13 +22,14 @@
     "@babel/preset-env": "^7.3.1",
     "babel-loader": "^8.0.5",
     "bootstrap": "^4.3.1",
-    "bootstrap-submenu": "^3.0.1",
     "css-loader": "^2.1.0",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.7",
     "style-loader": "^0.23.1",
     "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3",
+    "webpack-cli": "^3.2.3"
+  },
+  "devDependencies": {
     "webpack-dev-server": "^3.2.0"
   }
 }
