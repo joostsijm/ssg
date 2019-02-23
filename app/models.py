@@ -12,6 +12,23 @@ from flask_login import UserMixin
 from app import db, argon2, login_manager
 
 
+page_file = db.Table(
+    'page_file',
+    db.Column(
+        'page_id',
+        db.Integer,
+        db.ForeignKey('page.id'),
+        primary_key=True
+    ),
+    db.Column(
+        'file_id',
+        db.Integer,
+        db.ForeignKey('file.id'),
+        primary_key=True
+    ),
+)
+
+
 class User(db.Model, UserMixin):
     """Model for User"""
 
@@ -86,4 +103,30 @@ class Page(db.Model):
         backref=db.backref("children", lazy="dynamic"),
         uselist=False,
         remote_side=id
+    )
+
+
+class File(db.Model):
+    """Model for Page"""
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    datetime = db.Column(db.DateTime, default=datetime.utcnow)
+    path = db.Column(db.String, nullable=False)
+    identifier = db.Column(db.String) 
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id")
+    )
+    user = db.relationship(
+        "User",
+        backref=db.backref("Pages", lazy="dynamic")
+    )
+
+    files = db.relationship(
+        'page',
+        secondary=page_file,
+        lazy='subquery',
+        backref=db.backref('pages', lazy=True)
     )
