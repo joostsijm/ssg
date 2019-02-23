@@ -21,14 +21,14 @@
                             Action
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ url_for('backend.view_page', page_id=page.id) }}">View</a>
-                            <a class="dropdown-item" href="{{ url_for('backend.edit_page', page_id=page.id) }}">Edit</a>
-                            <a class="dropdown-item" href="{{ url_for('backend.remove_page', page_id=page.id) }}">Remove</a>
+                            <a class="dropdown-item" href="{{ url_for('backend_page.view_page', page_id=page.id) }}">View</a>
+                            <a class="dropdown-item" href="{{ url_for('backend_page.edit_page', page_id=page.id) }}">Edit</a>
+                            <a class="dropdown-item" href="{{ url_for('backend_page.remove_page', page_id=page.id) }}">Remove</a>
                         </div>
                     </div>
                 </td>
                 <td>
-                    {{ '> ' * (loop.depth - 1) }}<a href="{{ url_for('backend.view_page', page_id=page.id) }}">
+                    {{ '> ' * (loop.depth - 1) }}<a href="{{ url_for('backend_page.view_page', page_id=page.id) }}">
                         {{ page.title if page.title else 'page %s' % page.id }}
                     </a>
                 </td>
