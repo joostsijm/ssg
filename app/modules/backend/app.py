@@ -7,7 +7,7 @@ import os
 
 from flask_login import login_required
 from flask_menu import register_menu
-from flask import render_template, redirect, url_for, flash, Blueprint
+from flask import render_template, request, redirect, url_for, flash, Blueprint
 from app.models import Page
 
 
@@ -42,7 +42,7 @@ def render():
         render_page(path_base, page, menu)
 
     flash('Successfully rendered pages.', 'success')
-    return redirect(url_for('backend.index'))
+    return redirect(request.referrer, code=302)
 
 
 def generate_menu(page):
