@@ -121,11 +121,11 @@ class File(db.Model):
     )
     user = db.relationship(
         "User",
-        backref=db.backref("Pages", lazy="dynamic")
+        backref=db.backref("files", lazy="dynamic")
     )
 
     files = db.relationship(
-        'page',
+        'Page',
         secondary=page_file,
         lazy='subquery',
         backref=db.backref('pages', lazy=True)

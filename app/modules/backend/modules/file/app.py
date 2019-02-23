@@ -11,14 +11,14 @@ from app.models import Page
 
 
 BLUEPRINT = Blueprint(
-    'backend_page',
+    'backend_file',
     __name__,
     template_folder='templates'
 )
 
 
 @BLUEPRINT.route('/create', methods=["GET", "POST"])
-@register_menu(BLUEPRINT, 'create_page', 'Create page')
+@register_menu(BLUEPRINT, 'create_file', 'Create file')
 @login_required
 def create():
     """Page creating"""
