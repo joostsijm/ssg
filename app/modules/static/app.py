@@ -14,7 +14,6 @@ from app.models import User
 BLUEPRINT = Blueprint(
     "static",
     __name__,
-    template_folder="pages"
 )
 
 @BLUEPRINT.route("/", defaults={"page": "index"})
