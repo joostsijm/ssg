@@ -52,5 +52,5 @@ argon2 = Argon2(app)
 # Login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "backend.login"
+login_manager.login_view = "auth.login"
 login_manager.login_message_category = "warning"
