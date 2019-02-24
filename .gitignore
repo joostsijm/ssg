@@ -4,10 +4,7 @@
 *.min.css
 *.compiled.css
 node_modules/
-vendor/
 __pycache__/
 .venv/
-nohup.out
-yarn-error.log
 .env
 app/static/main.js
