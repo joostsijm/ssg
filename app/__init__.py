@@ -19,6 +19,7 @@ load_dotenv()
 
 class Config(object):
     """Flask configuration"""
+    UPLOAD_FOLDER = 'app/static/uploads'
     SCHEDULER_API_ENABLED = True
     SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URI"]
     SECRET_KEY = os.environ["SECRET_KEY"]

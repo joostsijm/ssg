@@ -3,11 +3,14 @@
 Backend
 """
 
+import os
 from flask_login import login_required, current_user
 from flask_menu import register_menu
 from flask import render_template, request, redirect, url_for, flash, Blueprint
-from app import db
-from app.models import Page
+from werkzeug.utils import secure_filename
+from app import app, db
+from app.models import File
+
 
 
 BLUEPRINT = Blueprint(
@@ -16,34 +19,47 @@ BLUEPRINT = Blueprint(
     template_folder='templates'
 )
 
+def allowed_file(filename):
+    allowed_extensions = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
 
 @BLUEPRINT.route('/create', methods=["GET", "POST"])
 @register_menu(BLUEPRINT, 'create_file', 'Create file')
 @login_required
 def create():
-    """Page creating"""
-    pages = Page.query.all()
+    """File creating"""
     if request.method == 'POST':
-        page = Page()
-        page.title = request.form['title']
-        page.source = request.form['source']
-        page.user_id = current_user.id
-        page.parent_id = request.form['parent_id'] if request.form['parent_id'] else None
+        if 'file' not in request.files:
+            flash('No file part', 'warning')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No file selected', 'warning')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        db.session.add(page)
-        db.session.commit()
+            db_file = File()
+            db_file.title = request.form['title']
+            db_file.user_id = current_user.id
+            db_file.path = file.filename
 
-        flash('Page "%s" successfully created' % page.title, 'success')
+            db.session.add(db_file)
+            db.session.commit()
 
-    return render_template('page/create.j2', pages=pages)
+            flash('File "%s" successfully uploaded' % file.filename, 'success')
+
+    return render_template('file/create.j2')
 
 
-@BLUEPRINT.route('/edit/<int:page_id>', methods=["GET", "POST"])
+@BLUEPRINT.route('/edit/<int:file_id>', methods=["GET", "POST"])
 @login_required
-def edit(page_id):
-    """Page editing"""
-    page = Page.query.get(page_id)
-    pages = Page.query.filter(Page.id != page.id).all()
+def edit(file_id):
+    """File editing"""
+    page = File.query.get(file_id)
 
     if request.method == 'POST':
         page.title = request.form['title']
@@ -54,31 +70,30 @@ def edit(page_id):
         db.session.add(page)
         db.session.commit()
 
-        flash('Page "%s" successfully edit' % page.title, 'success')
+        flash('File "%s" successfully edit' % page.title, 'success')
 
     return render_template(
-        'page/edit.j2',
+        'file/edit.j2',
         page=page,
-        pages=pages
     )
 
 
-@BLUEPRINT.route('/remove/<int:page_id>')
+@BLUEPRINT.route('/remove/<int:file_id>')
 @login_required
-def remove(page_id):
-    """Page removing"""
-    page = Page.query.get(page_id)
+def remove(file_id):
+    """File removing"""
+    file = File.query.get(file_id)
 
-    db.session.delete(page)
+    db.session.delete(file)
     db.session.commit()
 
-    flash('Page "%s" successfully remove' % page.title, 'success')
+    flash('File "%s" successfully remove' % file.title, 'success')
     return redirect(url_for('backend.index'))
 
 
-@BLUEPRINT.route('/view/<int:page_id>')
+@BLUEPRINT.route('/view/<int:file_id>')
 @login_required
-def view(page_id):
-    """Display page"""
-    page = Page.query.get(page_id)
-    return render_template('page/view.j2', page=page)
+def view(file_id):
+    """Display file"""
+    file = File.query.get(file_id)
+    return render_template('file/view.j2', file=file)

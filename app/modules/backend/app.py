@@ -8,7 +8,7 @@ import os
 from flask_login import login_required
 from flask_menu import register_menu
 from flask import render_template, request, redirect, url_for, flash, Blueprint
-from app.models import Page
+from app.models import Page, File
 
 
 BLUEPRINT = Blueprint(
@@ -23,8 +23,13 @@ BLUEPRINT = Blueprint(
 @login_required
 def index():
     """Show homepage"""
-    pages = Page.query.filter(Page.parent_id == None).all()
-    return render_template('site/index.j2', pages=pages)
+    pages = Page.query.all()
+    files = File.query.all()
+    return render_template(
+        'site/index.j2',
+        pages=pages,
+        files=files
+    )
 
 
 @BLUEPRINT.route('/render')
