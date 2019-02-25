@@ -13,6 +13,7 @@ from app import db, argon2, login_manager
 
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+IMAGE_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 page_file = db.Table(
     'page_file',
@@ -124,7 +125,7 @@ class File(db.Model):
 
     def is_image(self):
         """True if file is image"""
-        return self.extension() in ALLOWED_EXTENSIONS
+        return self.extension() in IMAGE_EXTENSIONS
 
 
     user_id = db.Column(

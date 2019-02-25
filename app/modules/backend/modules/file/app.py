@@ -63,22 +63,37 @@ def create():
 @login_required
 def edit(file_id):
     """File editing"""
-    page = File.query.get(file_id)
+    db_file = File.query.get(file_id)
 
     if request.method == 'POST':
-        page.title = request.form['title']
-        page.source = request.form['source']
-        page.parent_id = request.form['parent_id'] if request.form['parent_id'] else None
-        page.user_id = current_user.id
+        file = None
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename == '':
+                flash('No file selected', 'warning')
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        db.session.add(page)
+
+        if file is not None:
+            db_file.path = file.filename
+        if request.form['title']:
+            db_file.title = request.form['title']
+        else:
+            db_file.title = db_file.path
+
+        db_file.user_id = current_user.id
+
+        db.session.add(db_file)
         db.session.commit()
 
-        flash('File "%s" successfully edit' % page.title, 'success')
+        flash('File "%s" successfully edit' % db_file.title, 'success')
 
     return render_template(
         'file/edit.j2',
-        page=page,
+        file=db_file,
     )
 
 
