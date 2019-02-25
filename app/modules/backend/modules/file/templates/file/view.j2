@@ -2,10 +2,8 @@
 {% block content %}
 <h1>Title: {{ file.title }}</h1>
 <a href="{{ url_for('backend_file.edit', file_id=file.id) }}">Edit</a><br>
-<p>{{ file.path }}</p>
+<a href="/static/uploads/{{ file.path }}">{{ file.path}}</a>
 {% if file.is_image() %}
 <img src="/static/uploads/{{ file.path }}" alt="{{ file.title }}" class="img-thumbnail">
-{% else %}
-<a href="/static/uploads/{{ file.path }}">{{ file.title }}</a>
 {% endif %}
 {% endblock %}
