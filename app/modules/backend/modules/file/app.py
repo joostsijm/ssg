@@ -43,14 +43,18 @@ def create():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             db_file = File()
-            db_file.title = request.form['title']
+            if request.form['title']:
+                title = request.form['title'] 
+            else:
+                title = file.filename
+            db_file.title = title 
             db_file.user_id = current_user.id
             db_file.path = file.filename
 
             db.session.add(db_file)
             db.session.commit()
 
-            flash('File "%s" successfully uploaded' % file.filename, 'success')
+            flash('File "%s" successfully uploaded' % db_file.title, 'success')
 
     return render_template('file/create.j2')
 

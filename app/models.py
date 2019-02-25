@@ -12,6 +12,8 @@ from flask_login import UserMixin
 from app import db, argon2, login_manager
 
 
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 page_file = db.Table(
     'page_file',
     db.Column(
@@ -114,6 +116,16 @@ class File(db.Model):
     datetime = db.Column(db.DateTime, default=datetime.utcnow)
     path = db.Column(db.String, nullable=False)
     identifier = db.Column(db.String) 
+
+    def extension(self):
+        """Return file extension"""
+        return '.' in self.path and self.path.rsplit('.', 1)[1].lower()
+
+
+    def is_image(self):
+        """True if file is image"""
+        return self.extension() in ALLOWED_EXTENSIONS
+
 
     user_id = db.Column(
         db.Integer,
