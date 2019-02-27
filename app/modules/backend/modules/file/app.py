@@ -20,7 +20,7 @@ BLUEPRINT = Blueprint(
 )
 
 def allowed_file(filename):
-    allowed_extensions = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+    allowed_extensions = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'docx'])
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
