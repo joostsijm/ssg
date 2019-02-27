@@ -25,8 +25,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
-@BLUEPRINT.route('/create', methods=["GET", "POST"])
-@register_menu(BLUEPRINT, 'create_file', 'Create file')
+@BLUEPRINT.route('/upload', methods=["GET", "POST"])
+@register_menu(BLUEPRINT, 'upload_file', 'Upload file')
 @login_required
 def create():
     """File creating"""
