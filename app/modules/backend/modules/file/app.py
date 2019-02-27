@@ -55,6 +55,7 @@ def create():
             db.session.commit()
 
             flash('File "%s" successfully uploaded' % db_file.title, 'success')
+            return redirect(url_for('backend_file.view', file_id=db_file.id))
 
     return render_template('file/create.j2')
 

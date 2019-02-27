@@ -34,6 +34,7 @@ def create():
         db.session.commit()
 
         flash('Page "%s" successfully created' % page.title, 'success')
+        return redirect(url_for('backend_page.view', page_id=page.id))
 
     return render_template('page/create.j2', pages=pages)
 

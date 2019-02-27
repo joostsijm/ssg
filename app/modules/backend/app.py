@@ -44,10 +44,14 @@ def render():
         menu.append(generate_menu(page))
 
     path_base = 'app/modules/static/pages/'
-    shutil.rmtree(path_base + "public")
-    shutil.rmtree(path_base + "private")
-    os.makedirs(path_base + "public")
-    os.makedirs(path_base + "private")
+    path_public = path_base + "public"
+    path_private = path_base + "private"
+    if os.path.exists(path_public):
+        shutil.rmtree(path_public)
+    os.makedirs(path_public)
+    if os.path.exists(path_private):
+        shutil.rmtree(path_private)
+    os.makedirs(path_private)
 
     for page in pages:
         render_page(path_base, page, menu)
