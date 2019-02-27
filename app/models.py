@@ -70,7 +70,7 @@ class Page(db.Model):
     title = db.Column(db.String, nullable=False)
     datetime = db.Column(db.DateTime, default=datetime.utcnow)
     source = db.Column(db.String)
-
+    private = db.Column(db.Boolean, server_default='f', default=False)
 
     def content(self):
         """Render page source"""
@@ -79,7 +79,10 @@ class Page(db.Model):
 
     def url(self):
         """Generate URL for page"""
-        return quote(self.title.strip().lower().replace(" ", "_"))
+        url = quote(self.title.strip().lower().replace(" ", "_"))
+        if self.private and not self.parent_id:
+            return 'private/' + url
+        return url
 
 
     def path(self):
@@ -87,6 +90,7 @@ class Page(db.Model):
         if self.parent_id:
             return '%s/%s' % (self.parent.path(), self.url())
         return self.url()
+
 
     user_id = db.Column(
         db.Integer,
@@ -116,7 +120,8 @@ class File(db.Model):
     title = db.Column(db.String, nullable=False)
     datetime = db.Column(db.DateTime, default=datetime.utcnow)
     path = db.Column(db.String, nullable=False)
-    identifier = db.Column(db.String) 
+    identifier = db.Column(db.String)
+    private = db.Column(db.Boolean, server_default='f', default=False)
 
     def extension(self):
         """Return file extension"""

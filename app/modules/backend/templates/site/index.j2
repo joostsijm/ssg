@@ -13,6 +13,7 @@
                         <tr>
                             <th>Action</th>
                             <th>Title</th>
+                            <th>Private</th>
                             <th>Author</th>
                         </tr>
                     </thead>
@@ -36,6 +37,7 @@
                                     {{ page.title if page.title else 'page %s' % page.id }}
                                 </a>
                             </td>
+                            <td>{{ page.private }}</td>
                             <td>{{ page.user.name }}</td>
                         </tr>
                         {{ loop(page.children) }}

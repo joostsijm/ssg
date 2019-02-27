@@ -4,6 +4,7 @@ Backend
 """
 
 import os
+import shutil
 
 from flask_login import login_required
 from flask_menu import register_menu
@@ -43,6 +44,11 @@ def render():
         menu.append(generate_menu(page))
 
     path_base = 'app/modules/static/pages/'
+    shutil.rmtree(path_base + "public")
+    shutil.rmtree(path_base + "private")
+    os.makedirs(path_base + "public")
+    os.makedirs(path_base + "private")
+
     for page in pages:
         render_page(path_base, page, menu)
 
@@ -64,7 +70,10 @@ def generate_menu(page):
 
 def render_page(path, page, menu):
     """Function for page generation, recursive"""
-    path = path + page.url()
+    if not page.private and not page.parent_id:
+        path += 'public/' + page.url()
+    else:
+        path += page.url()
     if page.children.count():
         parent_path = path + '/'
         if not os.path.exists(parent_path):
