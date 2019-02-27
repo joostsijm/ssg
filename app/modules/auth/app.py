@@ -94,5 +94,4 @@ def register():
 def logout():
     """Logout function for users"""
     logout_user()
-    flash('Successfully logged out.', 'success')
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('static.show'))

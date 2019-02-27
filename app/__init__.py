@@ -31,6 +31,7 @@ app = Flask(__name__)
 app.config.from_object(Config())
 app.jinja_env.lstrip_blocks = True
 app.jinja_env.trim_blocks = True
+app.config['TESTING'] = False
 
 # Compress settings
 COMPRESS_MIMETYPES = [

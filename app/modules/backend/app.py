@@ -64,7 +64,10 @@ def generate_menu(page):
 
 def render_page(path, page, menu):
     """Function for page generation, recursive"""
-    path = path + page.url()
+    if not page.private and not page.parent_id:
+        path += 'public/' + page.url()
+    else:
+        path += page.url()
     if page.children.count():
         parent_path = path + '/'
         if not os.path.exists(parent_path):

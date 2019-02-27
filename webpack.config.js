@@ -15,6 +15,11 @@ module.exports = {
            jQuery: "jquery"
        })
     ],
+    devServer: {
+        proxy: {
+            '/': 'http://localhost:5000'
+        }
+    },
     module: {
       rules: [
         {
