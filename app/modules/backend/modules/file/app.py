@@ -4,6 +4,7 @@ Backend
 """
 
 import os
+from urllib.parse import quote
 from flask_login import login_required, current_user
 from flask_menu import register_menu
 from flask import render_template, request, redirect, url_for, flash, Blueprint
@@ -39,17 +40,19 @@ def create():
             flash('No file selected', 'warning')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            filename = file.filename
+            if request.form['title']:
+                title = request.form['title'] 
+                url = quote(title.strip().lower().replace(" ", "_"))
+                filename = secure_filename('%s.%s' % (url, filename.rsplit('.', 1)[1]))
+            else:
+                title = filename.rsplit('.', 1)[0]
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             db_file = File()
-            if request.form['title']:
-                title = request.form['title'] 
-            else:
-                title = file.filename
             db_file.title = title 
             db_file.user_id = current_user.id
-            db_file.path = file.filename
+            db_file.path = filename
 
             db.session.add(db_file)
             db.session.commit()
@@ -77,14 +80,16 @@ def edit(file_id):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-
+        filename = db_file.path
         if file is not None:
             db_file.path = file.filename
         if request.form['title']:
-            db_file.title = request.form['title']
-        else:
-            db_file.title = db_file.path
+            title = request.form['title'] 
+            url = quote(title.strip().lower().replace(" ", "_"))
+            db_file.path = secure_filename('%s.%s' % (url, db_file.path.rsplit('.', 1)[1]))
+            os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename), os.path.join(app.config['UPLOAD_FOLDER'], db_file.path))
 
+        db_file.title = title 
         db_file.user_id = current_user.id
 
         db.session.add(db_file)

@@ -123,6 +123,11 @@ class File(db.Model):
     identifier = db.Column(db.String)
     private = db.Column(db.Boolean, server_default='f', default=False)
 
+    def url(self):
+        """Generate URL for page"""
+        return quote(self.title.strip().lower().replace(" ", "_"))
+
+
     def extension(self):
         """Return file extension"""
         return '.' in self.path and self.path.rsplit('.', 1)[1].lower()
