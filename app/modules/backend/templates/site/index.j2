@@ -6,6 +6,9 @@
         <div class="card">
             <div class="card-header">
                 Pages
+                <div class="float-right">
+                    <a href="{{ url_for('backend_page.create') }}" class="btn btn-secondary btn-sm">Create</a>
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-striped table-sm">
@@ -51,6 +54,9 @@
         <div class="card">
             <div class="card-header">
                 Files
+                <div class="float-right">
+                    <a href="{{ url_for('backend_file.create') }}" class="btn btn-secondary btn-sm">Upload</a>
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-striped table-sm">
