@@ -41,7 +41,8 @@ def render():
     pages = Page.query.filter(Page.parent_id == None).all()
     menu = []
     for page in pages:
-        menu.append(generate_menu(page))
+        if page.title != 'index':
+            menu.append(generate_menu(page))
 
     path_base = 'app/modules/static/pages/'
     path_public = path_base + "public"
