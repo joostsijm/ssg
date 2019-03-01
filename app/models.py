@@ -40,6 +40,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), unique=True)
     _password = db.Column("password", db.String(255))
     registration_at = db.Column(db.DateTime, default=datetime.utcnow)
+    approved = db.Column(db.Boolean, server_default='f', default=False)
 
     def __init__(self, id=None):
         self.id = id
@@ -79,10 +80,7 @@ class Page(db.Model):
 
     def url(self):
         """Generate URL for page"""
-        url = quote(self.title.strip().lower().replace(" ", "_"))
-        if self.private and not self.parent_id:
-            return 'private/' + url
-        return url
+        return quote(self.title.strip().lower().replace(" ", "_"))
 
 
     def path(self):

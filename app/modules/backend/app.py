@@ -6,10 +6,11 @@ Backend
 import os
 import shutil
 
+import json
 from flask_login import login_required
 from flask_menu import register_menu
 from flask import render_template, request, redirect, url_for, flash, Blueprint
-from app.models import Page, File
+from app.models import Page, File, User
 
 
 BLUEPRINT = Blueprint(
@@ -18,18 +19,21 @@ BLUEPRINT = Blueprint(
     template_folder='templates'
 )
 
+BASE_PATH = 'app/modules/static/pages/'
 
 @BLUEPRINT.route('/')
 @register_menu(BLUEPRINT, 'index', 'Home')
 @login_required
 def index():
     """Show homepage"""
-    pages = Page.query.all()
+    pages = Page.query.filter(Page.parent_id == None).all()
     files = File.query.all()
+    users = User.query.all()
     return render_template(
         'site/index.j2',
         pages=pages,
-        files=files
+        files=files,
+        users=users
     )
 
 
@@ -42,6 +46,7 @@ def render():
     menu = []
     for page in pages:
         menu.append(generate_menu(page))
+    print_json(menu)
 
     path_base = 'app/modules/static/pages/'
     path_public = path_base + "public"
@@ -54,7 +59,10 @@ def render():
     os.makedirs(path_private)
 
     for page in pages:
-        render_page(path_base, page, menu)
+        generate_directory('', page)
+
+    for page in pages:
+        render_page('', page, menu)
 
     flash('Successfully rendered pages.', 'success')
     return redirect(request.referrer, code=302)
@@ -65,6 +73,7 @@ def generate_menu(page):
     menu_item = {}
     menu_item['title'] = page.title
     menu_item['url'] = page.path()
+    menu_item['private'] = page.private
     if page.children.count():
         menu_item['children'] = []
         for child_page in page.children:
@@ -72,23 +81,52 @@ def generate_menu(page):
     return menu_item
 
 
+def generate_directory(path, page):
+    """Generate directories for pages"""
+    if page.children.count():
+        parent_path = path + page.url() + '/'
+        print(parent_path)
+        public_path = BASE_PATH + 'public/' + path + page.url()
+        private_path = BASE_PATH + 'private/' + path + page.url()
+        #print(public_path)
+        #print(private_path)
+        if not os.path.exists(public_path):
+            os.makedirs(public_path)
+        if not os.path.exists(private_path):
+            os.makedirs(private_path)
+        for child_page in page.children:
+            generate_directory(parent_path, child_page)
+
+
 def render_page(path, page, menu):
     """Function for page generation, recursive"""
-    if not page.private and not page.parent_id:
-        path += 'public/' + page.url()
-    else:
-        path += page.url()
     if page.children.count():
-        parent_path = path + '/'
-        if not os.path.exists(parent_path):
-            os.makedirs(parent_path)
+        path += page.url() + '/'
         for child_page in page.children:
-            render_page(parent_path, child_page, menu)
+            render_page(path, child_page, menu)
 
-    with open('%s.html' % path, 'w') as file:
+    path += page.url()
+
+    # private
+    private_path = '%s%s/%s.html' % (BASE_PATH, 'private', path)
+    with open(private_path, 'w') as file:
         rendered_page = render_template(
-            'public/site.j2',
+            'public/private.j2',
             page=page,
             menu=menu
         )
         file.write(rendered_page)
+
+    public_path = '%s%s/%s.html' % (BASE_PATH, 'public', path)
+    with open(public_path, 'w') as file:
+        rendered_page = render_template(
+            'public/public.j2',
+            page=page,
+            menu=menu
+        )
+        file.write(rendered_page)
+
+
+def print_json(json_text):
+    """Print data to console"""
+    print(json.dumps(json_text, sort_keys=True, indent=4))

@@ -1,0 +1,34 @@
+{% extends "layout/public.j2" %}
+{% block nav %}
+<ul class="navbar-nav mr-auto">
+    {% for menu_item in menu %}
+    {% if not menu_item.private %}
+    {% if 'children' in menu_item %}
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ menu_item['title'] }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/{{ menu_item['url'] }}">{{ menu_item['title'] }}</a>
+            {%- for child_menu_item in menu_item['children'] recursive -%}
+            {% if not child_menu_item.private %}
+            <a class="dropdown-item" href="/{{ child_menu_item['url'] }}">{{ '> ' * (loop.depth - 1) }}{{ child_menu_item['title'] }}</a>
+            {{ loop(child_menu_item['children']) }}
+            {% endif %}
+            {%- endfor -%}
+        </div>
+    </li>
+    {% else %}
+    <li class="nav-item">
+        <a class="nav-link" href="/{{ menu_item['url'] }}">{{ menu_item['title'] }}</a>
+    </li>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+</ul>
+<ul class="navbar-nav">
+    <li class="nav-item text-nowrap">
+          <a class="nav-link" href="/login">Login</a>
+    </li>
+</ul>
+{% endblock %}

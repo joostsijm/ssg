@@ -26,17 +26,18 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = User.query.filter(User.email == email).first()
-        if user is not None:
+        if user:
+            if not user.approved:
+                flash('Account not approved yet.', 'warning')
             if user.check_password(password):
                 login_user(user, remember=True)
-                flash('You were successfully logged in.', 'success')
-                if request.args.get("next") is not None:
-                    return redirect(request.args.get("next"))
+                flash('Successfully loggend in.', 'success')
+                if request.args.get("next"):
+                    return redirect(request.args.get('next'))
                 return redirect(url_for('backend.index'))
-            flash('Incorrect password.', 'danger')
-        else:
-            flash('User not found.', 'danger')
-        return redirect(url_for('auth.login'))
+            flash('Password Incorrect.', 'warning')
+            return render_template('login.j2', login_email=email)
+        flash('Email not found.', 'warning')
     return render_template('login.j2')
 
 
@@ -86,7 +87,7 @@ def register():
 
     if request.args.get("next") is not None:
         return redirect(request.args.get("next"))
-    return redirect(url_for('backend.index'))
+    return redirect(url_for('static.index'))
 
 
 @BLUEPRINT.route("/logout")
