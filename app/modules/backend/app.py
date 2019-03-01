@@ -6,7 +6,6 @@ Backend
 import os
 import shutil
 
-import json
 from flask_login import login_required
 from flask_menu import register_menu
 from flask import render_template, request, redirect, url_for, flash, Blueprint
@@ -47,7 +46,6 @@ def render():
     for page in pages:
         if page.title != 'index':
             menu.append(generate_menu(page))
-    print_json(menu)
 
     path_base = 'app/modules/static/pages/'
     path_public = path_base + "public"
@@ -86,11 +84,8 @@ def generate_directory(path, page):
     """Generate directories for pages"""
     if page.children.count():
         parent_path = path + page.url() + '/'
-        print(parent_path)
         public_path = BASE_PATH + 'public/' + path + page.url()
         private_path = BASE_PATH + 'private/' + path + page.url()
-        #print(public_path)
-        #print(private_path)
         if not os.path.exists(public_path):
             os.makedirs(public_path)
         if not os.path.exists(private_path):
@@ -126,8 +121,3 @@ def render_page(path, page, menu):
             menu=menu
         )
         file.write(rendered_page)
-
-
-def print_json(json_text):
-    """Print data to console"""
-    print(json.dumps(json_text, sort_keys=True, indent=4))
