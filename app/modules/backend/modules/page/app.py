@@ -27,6 +27,7 @@ def create():
         page = Page()
         page.title = request.form['title']
         page.source = request.form['source']
+        page.private = 'private' in request.form
         page.user_id = current_user.id
         page.parent_id = request.form['parent_id'] if request.form['parent_id'] else None
 
@@ -49,6 +50,7 @@ def edit(page_id):
     if request.method == 'POST':
         page.title = request.form['title']
         page.source = request.form['source']
+        page.private = 'private' in request.form
         page.parent_id = request.form['parent_id'] if request.form['parent_id'] else None
         page.user_id = current_user.id
 
