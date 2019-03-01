@@ -99,9 +99,9 @@ def render_page(path, page, menu, private):
     if page.private:
         private = True
     if page.children.count():
-        path += page.url() + '/'
+        parent_path = path + page.url() + '/'
         for child_page in page.children:
-            render_page(path, child_page, menu, private)
+            render_page(parent_path, child_page, menu, private)
 
     path += page.url()
 
