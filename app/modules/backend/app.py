@@ -61,7 +61,7 @@ def render():
         generate_directory('', page)
 
     for page in pages:
-        render_page('', page, menu)
+        render_page('', page, menu, False)
 
     flash('Successfully rendered pages.', 'success')
     return redirect(request.referrer, code=302)
@@ -94,16 +94,17 @@ def generate_directory(path, page):
             generate_directory(parent_path, child_page)
 
 
-def render_page(path, page, menu):
+def render_page(path, page, menu, private):
     """Function for page generation, recursive"""
+    if page.private:
+        private = True
     if page.children.count():
         path += page.url() + '/'
         for child_page in page.children:
-            render_page(path, child_page, menu)
+            render_page(path, child_page, menu, private)
 
     path += page.url()
 
-    # private
     private_path = '%s%s/%s.html' % (BASE_PATH, 'private', path)
     with open(private_path, 'w') as file:
         rendered_page = render_template(
@@ -113,11 +114,12 @@ def render_page(path, page, menu):
         )
         file.write(rendered_page)
 
-    public_path = '%s%s/%s.html' % (BASE_PATH, 'public', path)
-    with open(public_path, 'w') as file:
-        rendered_page = render_template(
-            'public/public.j2',
-            page=page,
-            menu=menu
-        )
-        file.write(rendered_page)
+    if not private:
+        public_path = '%s%s/%s.html' % (BASE_PATH, 'public', path)
+        with open(public_path, 'w') as file:
+            rendered_page = render_template(
+                'public/public.j2',
+                page=page,
+                menu=menu
+            )
+            file.write(rendered_page)
