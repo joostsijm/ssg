@@ -7,4 +7,4 @@ node_modules/
 __pycache__/
 .venv/
 .env
-app/static/main.js
+app/static/js/main.js
