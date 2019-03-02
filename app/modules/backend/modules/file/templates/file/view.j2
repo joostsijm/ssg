@@ -1,6 +1,6 @@
 {% extends "layout/backend.j2" %}
 {% block content %}
-<h1>Title: {{ file.title }}</h1>
+<h1>File: {{ file.title }}</h1>
 <a href="{{ url_for('backend_file.edit', file_id=file.id) }}">Edit</a><br>
 <a href="/static/uploads/{{ file.path }}">{{ file.path}}</a>
 {% if file.is_image() %}

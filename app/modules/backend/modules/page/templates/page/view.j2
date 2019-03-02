@@ -1,6 +1,6 @@
 {% extends "layout/backend.j2" %}
 {% block content %}
-<h1>Title: {{ page.title }}</h1>
+<h1>Page: {{ page.title }}</h1>
 <a href="{{ url_for('backend_page.edit', page_id=page.id) }}">Edit</a><br>
 <p>{{ page.content() }}</p>
 {% endblock %}
