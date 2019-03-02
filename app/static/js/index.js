@@ -6,4 +6,4 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import SimpleMDE from 'simplemde';
 import 'simplemde/dist/simplemde.min.css';
 
-SimpleMDE();
+new SimpleMDE();
