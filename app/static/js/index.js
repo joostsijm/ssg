@@ -3,7 +3,7 @@
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-console.log("Hello from JavaScript!");
+import SimpleMDE from 'simplemde';
+import 'simplemde/dist/simplemde.min.css';
 
-var name = "Bob", time = "today";
-console.log(`Hello ${name}, how are you ${time}?`);
+SimpleMDE();
